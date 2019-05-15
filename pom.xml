@@ -1,0 +1,201 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>springCloud2-provider</artifactId>
+  <name>member server</name>
+  <description>会员服务-服务提供者</description>
+  <parent>
+    <groupId>com.fpq</groupId>
+    <artifactId>springcloud2-parent</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+  </parent>
+   <!-- 配置相关设置及中间件版本号 -->  
+  <properties>
+	<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	<java.version>1.8</java.version>
+	<spring-cloud.version>Finchley.RC1</spring-cloud.version>
+  </properties>
+  
+	<!-- 管理依赖 -->
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>org.springframework.cloud</groupId>
+				<artifactId>spring-cloud-dependencies</artifactId>
+				<!-- <version>Finchley.M7</version> -->
+				<version>${spring-cloud.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+	<dependencies>
+		<!-- 引入对工程springCloud2-common的依赖 -->
+		<!-- <dependency>
+			<groupId>com.fpq</groupId>
+			<artifactId>springCloud2-common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency> -->
+		<!-- 引入springBoot启动器 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter</artifactId>
+		</dependency>
+		<!-- SpringBoot整合Web组件 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<!-- SpringBoot整合eureka客户端 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+		</dependency>
+		<!-- 热部署：1.添加devtools的依赖 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<optional>true</optional>
+			<scope>true</scope>
+		</dependency>
+		<!-- hystrix断路器 -->
+		<dependency>
+			<groupId>org.springframework.cloud</groupId>
+			<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+		</dependency>
+		<!-- 引入Feign -->
+		<dependency>
+	      <groupId>org.springframework.cloud</groupId>
+	      <artifactId>spring-cloud-starter-openfeign</artifactId>
+	    </dependency>
+	    <!-- https://mvnrepository.com/artifact/org.projectlombok/lombok -->
+		<dependency>
+		    <groupId>org.projectlombok</groupId>
+		    <artifactId>lombok</artifactId>
+		    <scope>provided</scope>
+		</dependency>
+		<!-- apollo 携程apollo配置中心框架,需要自己将编译后的jar打入本地maven库 -->
+		<dependency>
+			<groupId>com.ctrip.framework.apollo</groupId>
+			<artifactId>apollo-client</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<dependency>
+			<groupId>com.ctrip.framework.apollo</groupId>
+			<artifactId>apollo-core</artifactId>
+			<version>1.1.0</version>
+		</dependency>
+		<!-- 引入fastjson -->
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+			<version>1.2.3</version>
+		</dependency>
+		<!-- 引入springBoot单元测试工具 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<!-- swagger2 -->
+		<!-- <dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.8.0</version>
+		</dependency>
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger-ui</artifactId>
+			<version>2.8.0</version>
+		</dependency> -->
+		<!-- swagger-spring-boot -->
+		<dependency>
+			<groupId>com.spring4all</groupId>
+			<artifactId>swagger-spring-boot-starter</artifactId>
+			<version>1.7.0.RELEASE</version>
+		</dependency>
+	</dependencies>
+	<!-- 注意： 这里必须要添加， 否者各种依赖有问题 -->
+	<repositories>
+	<repository>
+		<id>spring-milestones</id>
+		<name>Spring Milestones</name>
+		<url>https://repo.spring.io/libs-milestone</url>
+		<snapshots>
+			<enabled>false</enabled>
+		</snapshots>
+	</repository>
+	</repositories>
+  
+    <!-- 添加一个SpringBoot的构建的插件,若不添加则在虚拟机中启动时会报“jar中没有主清单属性”错误 -->
+    <build>
+	  <plugins>
+	  	<plugin>
+	  		<groupId>org.springframework.boot</groupId>
+	 		<artifactId>spring-boot-maven-plugin</artifactId>
+	 		<configuration>
+	 		  <!-- 热部署：2.配置fork为true，如果没有该配置，devtools不会起作用；
+	 		       热部署:3.开启自动编译：在eclipse的Project菜单中选中Build Automatically，否则热部署不生效 -->
+	 		  <fork>true</fork>
+	 		</configuration>
+	 		
+	  	</plugin>
+	  	<!-- 配置maven进行编译的插件 -->
+	  	<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-compiler-plugin</artifactId>
+			<configuration>
+				<source>1.8</source>
+				<target>1.8</target>
+			</configuration>
+		</plugin>
+	  	<plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-resources-plugin</artifactId>
+			<executions>
+				<execution>
+					<id>copy-conf</id>
+					<phase>package</phase>
+					<goals>
+						<goal>copy-resources</goal>
+					</goals>
+					<configuration>
+						<encoding>UTF-8</encoding>
+						<outputDirectory>${project.build.directory}/ext/conf</outputDirectory>
+						<resources>
+							<resource>
+								<directory>ext/conf</directory>
+								<includes>
+									<include>logback.xml</include>
+								</includes>
+								<filtering>true</filtering>
+							</resource>
+						</resources>
+					</configuration>
+				</execution>
+			</executions>
+		</plugin>
+		<!-- Maven工程配置代码覆盖工具Jacoco -->
+	  	<plugin>
+			<groupId>org.jacoco</groupId>
+			<artifactId>jacoco-maven-plugin</artifactId>
+			<version>0.7.5.201505241946</version>
+			<executions>
+				<execution>
+					<id>default-prepare-agent</id>
+					<goals>
+						<goal>prepare-agent</goal>
+					</goals>
+				</execution>
+				<execution>
+					<id>default-prepare-agent-integration</id>
+					<goals>
+						<goal>prepare-agent-integration</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
+	  	
+	  </plugins>
+	 </build>
+</project>
